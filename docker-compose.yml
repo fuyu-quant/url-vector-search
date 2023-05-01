@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  notebook:
+    container_name: urlvectorsearch
+    image: jupyter/datascience-notebook
+    ports:
+      - '8090:8090'
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    volumes:
+      - /Users/tanakatouma/vscode/url-vector-search/:/home/url-vector-search/
+    command: start-notebook.sh --NotebookApp.token=''
