@@ -97,6 +97,6 @@ def add_text(urls_, qdrant_):
 
         # qdrantに登録
         docs_ = [Document(page_content=summ_text, metadata={"url": url})]
-        qdrant_.add_documents(docs_, collection_name = f"documents{d}")
+        qdrant_.add_documents(docs_, collection_name = "")
        
     return 
