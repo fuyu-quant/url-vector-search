@@ -19,7 +19,7 @@ def description_output_with_scoer(qdrant_, query_, num_output=5):
 
     output_llm = OpenAI(temperature=0, model_name="gpt-3.5-turbo")
 
-    output_ = ""
+    output_ = {}
     for i in range(num_output):
         # 文章とスコアの取得
         docu, score = found_docs[i]
@@ -28,7 +28,9 @@ def description_output_with_scoer(qdrant_, query_, num_output=5):
 
         description = make_description(query_, docu, output_llm)
 
-        output_ += f"{description}" + "\n" + f"score：{score}" + "\n" + f"URL：{url}" + "\n"
+        data = {f'descritption{i}': description, f'score{i}': score, f'url{i}': url}
+
+        output_.update(data)
     
     return output_
 
@@ -38,7 +40,7 @@ def description_output(qdrant_, query_, num_output=5):
 
     output_llm = OpenAI(temperature=0, model_name="gpt-3.5-turbo")
 
-    output_ = ""
+    output_ = {}
     for i in range(num_output):
         # 文章の取得
         docu = found_docs[i].page_content
@@ -47,19 +49,21 @@ def description_output(qdrant_, query_, num_output=5):
 
         description = make_description(query_, docu, output_llm)
 
-        output_ += f"{description}" + "\n" + f"{url}" + "\n"
-    
+        data = {f'descritption{i}': description, f'url{i}': url}
+
+        output_.update(data)
+
     return output_
 
 
 
 
-def description_output_mmr(qdrant_, query_, num_output=5, k_=2, fetch_k_=10):
-    found_docs = qdrant_.max_marginal_relevance_search(query_, k_, fetch_k_)
+def description_output_mmr(qdrant_, query_, num_output=5, fetch_k_=10):
+    found_docs = qdrant_.max_marginal_relevance_search(query_, k = num_output, fetch_k = fetch_k_)
 
     output_llm = OpenAI(temperature=0, model_name="gpt-3.5-turbo")
 
-    output_ = ""
+    output_ = {}
     for i in range(num_output):
         # 文章の取得
         docu = found_docs[i].page_content
@@ -68,6 +72,8 @@ def description_output_mmr(qdrant_, query_, num_output=5, k_=2, fetch_k_=10):
 
         description = make_description(query_, docu, output_llm)
 
-        output_ += f"{description}" + "\n" + f"{url}" + "\n"
+        data = {f'descritption{i}': description, f'url{i}': url}
+
+        output_.update(data)
     
     return output_
