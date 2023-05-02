@@ -49,3 +49,24 @@ def description_output(qdrant_, query_, num_output=5):
         output_ += f"{description}" + "\n" + f"{url}" + "\n"
     
     return output_
+
+
+
+
+def description_output_mmr(qdrant_, query_, num_output=5, k_=2, fetch_k_=10):
+    found_docs = qdrant_.max_marginal_relevance_search(query_, k_, fetch_k_)
+
+    output_llm = OpenAI(temperature=0, model_name="gpt-3.5-turbo")
+
+    output_ = ""
+    for i in range(num_output):
+        # 文章の取得
+        docu = found_docs[i].page_content
+        # リンクの取得
+        url = found_docs[i].metadata['url']
+
+        description = make_description(query_, docu, output_llm)
+
+        output_ += f"{description}" + "\n" + f"{url}" + "\n"
+    
+    return output_

@@ -16,13 +16,6 @@ def retreiving_text(urls_):
 
 
 
-def add_to_qdrant(qdrant_, text_, url_, text_number):
-    docs_ = [Document(page_content=text_, metadata={"url": url_ })]
-    qdrant_.add_documents(docs_, collection_name = f"documents{text_number}")
-    return
-
-
-
 def text_summary(text_):
     chunks = [text_[i:i+1000] for i in range(0, len(text_), 1000)]
     result = '\n\n'.join(chunks)
@@ -76,12 +69,7 @@ def text_summary(text_):
 
 
 
-
-
-def create_vectordatabase(urls_, path = ''):
-    docs = retreiving_text(urls_)
-    num_docs = len(docs)
-
+def create_vectordatabase(path = ''):
     embeddings = OpenAIEmbeddings()
 
     # qdrantのベクトルデータベースの作成
@@ -90,6 +78,14 @@ def create_vectordatabase(urls_, path = ''):
         qdrant = Qdrant.from_documents(sample, embeddings, location=":memory:", collection_name= "sample")
     else:
         qdrant = Qdrant.from_documents(sample, embeddings, path= path, collection_name="sample")
+
+    return qdrant
+
+
+
+def add_text(urls_, qdrant_):
+    docs = retreiving_text(urls_)
+    num_docs = len(docs)
 
     for d in range(num_docs):
         url = urls_[d]
@@ -100,6 +96,7 @@ def create_vectordatabase(urls_, path = ''):
         summ_text = text_summary(text)
 
         # qdrantに登録
-        add_to_qdrant(qdrant, summ_text, url, d)
-
-    return qdrant
+        docs_ = [Document(page_content=summ_text, metadata={"url": url})]
+        qdrant_.add_documents(docs_, collection_name = f"documents{d}")
+       
+    return 
