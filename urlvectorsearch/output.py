@@ -1,4 +1,5 @@
 from langchain.llms import OpenAI
+from langchain.vectorstores import Qdrant
 
 
 def make_description(que_, docu_, llm_):
