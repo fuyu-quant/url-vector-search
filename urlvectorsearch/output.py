@@ -28,7 +28,7 @@ def description_output_with_scoer(qdrant_, query_, num_output=5):
 
         description = make_description(query_, docu, output_llm)
 
-        data = {f'descritption{i}': description, f'score{i}': score, f'url{i}': url}
+        data = {f'description{i}': description, f'score{i}': score, f'url{i}': url}
 
         output_.update(data)
     
@@ -49,7 +49,7 @@ def description_output(qdrant_, query_, num_output=5):
 
         description = make_description(query_, docu, output_llm)
 
-        data = {f'descritption{i}': description, f'url{i}': url}
+        data = {f'description{i}': description, f'url{i}': url}
 
         output_.update(data)
 
@@ -72,7 +72,7 @@ def description_output_mmr(qdrant_, query_, num_output=5, fetch_k_=10):
 
         description = make_description(query_, docu, output_llm)
 
-        data = {f'descritption{i}': description, f'url{i}': url}
+        data = {f'description{i}': description, f'url{i}': url}
 
         output_.update(data)
     
